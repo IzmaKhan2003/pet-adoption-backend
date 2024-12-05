@@ -15,22 +15,58 @@ async function getUsers() {
 
 // Add a new user
 async function addUser(userDetails) {
-  const connection = await getConnection();
-  const { Name, Email, Password, Phone, Address, UserType } = userDetails;
-
-  try {
-    const sql = `
-      INSERT INTO Users (Name, Email, Password, Phone, Address, UserType)
-      VALUES (:Name, :Email, :Password, :Phone, :Address, :UserType)
-    `;
-    await connection.execute(sql, { Name, Email, Password, Phone, Address, UserType }, { autoCommit: true });
-  } catch (err) {
-    throw new Error("Error adding user: " + err.message);
-  } finally {
-    await connection.close(); // Close the connection
+    const connection = await getConnection();
+    const { Name, Email, Password, Phone, Address, UserType } = userDetails;
+  
+    try {
+      const sql = `
+        INSERT INTO Users (Name, Email, Password, Phone, Address, UserType)
+        VALUES (:Name, :Email, :Password, :Phone, :Address, :UserType)
+      `;
+      await connection.execute(sql, { Name, Email, Password, Phone, Address, UserType }, { autoCommit: true });
+    } catch (err) {
+      throw new Error("Error adding user: " + err.message);
+    } finally {
+      await connection.close();
+    }
   }
-}
 
+// Get user by email
+async function getUserByEmail(email) {
+    const connection = await getConnection();
+    try {
+      const result = await connection.execute(
+        "SELECT * FROM Users WHERE Email = :email",
+        [email]
+      );
+  
+      // The result will be an array, where each element corresponds to a column.
+      // We return the first row (which corresponds to the user found by email).
+      const user = result.rows[0];
+  
+      // If no user is found, return null or handle it accordingly
+      if (!user) {
+        return null;
+      }
+  
+      // Return an object with named fields for easier access
+      return {
+        UserID: user[0],      // UserID is at index 0
+        Name: user[1],        // Name is at index 1
+        Email: user[2],       // Email is at index 2
+        Password: user[3],    // Password (hashed) is at index 3
+        Phone: user[4],       // Phone is at index 4
+        Address: user[5],     // Address is at index 5
+        UserType: user[6]     // UserType is at index 6
+      };
+    } catch (err) {
+      throw new Error("Error fetching user by email: " + err.message);
+    } finally {
+      await connection.close();
+    }
+  }
+  
+  
 // Get user by ID
 async function getUserById(userId) {
   const connection = await getConnection();
@@ -84,4 +120,4 @@ async function deleteUser(userId) {
   }
 }
 
-module.exports = { getUsers, addUser, getUserById, updateUser, deleteUser };
+module.exports = { getUsers, addUser, getUserByEmail, getUserById, updateUser, deleteUser };

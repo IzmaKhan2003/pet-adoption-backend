@@ -6,6 +6,7 @@ const adoptionRequestsRoutes = require("./routes/adoptionRequestsRoutes.js"); //
 const healthRecordRoutes = require("./routes/healthRecordRoutes.js"); // Import adoption request routes
 const followUpCheckRoutes = require("./routes/followUpCheckRoutes.js"); // Import the routes for follow-up checks
 const adminRoutes = require("./routes/adminRoutes.js"); // Import admin routes
+const authRoutes = require("./routes/authRoutes"); // Import authentication routes
 const { initDb } = require("./config/db"); // Import database initialization
 
 const app = express();
@@ -27,6 +28,8 @@ app.use("/api", healthRecordRoutes);
 app.use("/api", followUpCheckRoutes);
 // Use the admin routes
 app.use("/api", adminRoutes);
+// Use authentication routes
+app.use("/api/auth", authRoutes);
 
 // Start the server
 app.listen(PORT, async () => {
