@@ -1,6 +1,7 @@
 const express = require("express");
 const bodyParser = require("body-parser");
 const petsRoutes = require("./routes/petsRoutes"); // Import pet routes
+const usersRoutes = require("./routes/usersRoutes"); // Import user routes
 const { initDb } = require("./config/db"); // Import database initialization
 
 const app = express();
@@ -12,6 +13,8 @@ app.use(bodyParser.urlencoded({ extended: true }));
 
 // Use the pet routes
 app.use("/api", petsRoutes);
+// Use the user routes
+app.use("/api", usersRoutes);
 
 // Start the server
 app.listen(PORT, async () => {
