@@ -1,7 +1,7 @@
 const express = require("express");
 const router = express.Router();
 const adoptionRequestsController = require("../controllers/adoptionRequestsController"); // Import controller
-
+const isAdmin = require("../middlewares/isAdmin");
 // Fetch all adoption requests
 router.get("/adoption-requests", adoptionRequestsController.getAllAdoptionRequests);
 
@@ -12,7 +12,7 @@ router.post("/adoption-requests", adoptionRequestsController.createAdoptionReque
 router.get("/adoption-requests/:requestId", adoptionRequestsController.getAdoptionRequestById);
 
 // Update adoption request status
-router.put("/adoption-requests/:requestId", adoptionRequestsController.updateAdoptionStatus);
+router.put("/adoption-requests/:requestId", isAdmin, adoptionRequestsController.updateAdoptionStatus);
 
 // Delete adoption request by ID
 router.delete("/adoption-requests/:requestId", adoptionRequestsController.deleteAdoptionRequest);

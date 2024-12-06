@@ -2,8 +2,10 @@ const express = require("express");
 const router = express.Router();
 const usersController = require("../controllers/usersController"); // Import users controller
 const isSelfOrAdmin = require("../middlewares/isSelfOrAdmin");
+const isAdmin = require("../middlewares/isAdmin");
+
 // Fetch all users
-router.get("/users", usersController.getAllUsers);
+router.get("/users", isAdmin, usersController.getAllUsers);
 
 // Add a new user
 router.post("/users", usersController.createUser);
