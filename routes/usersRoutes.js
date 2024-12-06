@@ -1,15 +1,15 @@
 const express = require("express");
 const router = express.Router();
 const usersController = require("../controllers/usersController"); // Import users controller
-
+const isSelfOrAdmin = require("../middlewares/isSelfOrAdmin");
 // Fetch all users
 router.get("/users", usersController.getAllUsers);
 
 // Add a new user
 router.post("/users", usersController.createUser);
 
-// Get a specific user by ID
-router.get("/users/:userId", usersController.getUserById);
+// Allow Admins or the user themselves to access the route
+router.get("/:userId", isSelfOrAdmin, usersController.getUserById);
 
 // Update user details by ID
 router.put("/users/:userId", usersController.updateUser);
