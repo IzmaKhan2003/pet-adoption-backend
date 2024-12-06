@@ -12,7 +12,7 @@ router.post("/adoption-requests", adoptionRequestsController.createAdoptionReque
 router.get("/adoption-requests/:requestId", adoptionRequestsController.getAdoptionRequestById);
 
 // Update adoption request status
-router.put("/adoption-requests/:requestId", isAdmin, adoptionRequestsController.updateAdoptionStatus);
+router.put("/adoption-requests/:requestId", isAdmin, adoptionRequestsController.updateAdoptionRequestStatus);
 
 // Delete adoption request by ID
 router.delete("/adoption-requests/:requestId", adoptionRequestsController.deleteAdoptionRequest);

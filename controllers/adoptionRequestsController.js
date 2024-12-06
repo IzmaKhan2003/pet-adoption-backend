@@ -1,4 +1,5 @@
 const AdoptionRequestModel = require("../models/AdoptionRequestModel"); // Import the AdoptionRequest model
+const { sendAdoptionApprovalEmail } = require("../utils/emailUtils");
 
 // Fetch all adoption requests
 exports.getAllAdoptionRequests = async (req, res) => {
@@ -41,18 +42,24 @@ exports.getAdoptionRequestById = async (req, res) => {
 };
 
 // Update adoption request status
-exports.updateAdoptionStatus = async (req, res) => {
-  const requestId = req.params.requestId;
-  const { Status } = req.body;
+exports.updateAdoptionRequestStatus = async (req, res) => {
+    const { requestId, status, userEmail, petName } = req.body;
 
-  try {
-    await AdoptionRequestModel.updateAdoptionStatus(requestId, Status); // Update adoption request status
-    res.send("Adoption request status updated successfully!"); // Success message
-  } catch (err) {
-    console.error("Error updating adoption request status:", err);
-    res.status(500).send("Error updating adoption request status.");
-  }
-};
+    try {
+      // Update the adoption request status
+      await AdoptionRequestModel.updateAdoptionStatus(requestId, status);
+  
+      // If the status is "Approved", send the email
+      if (status === "Approved") {
+        await sendAdoptionApprovalEmail(userEmail, petName);
+      }
+  
+      res.status(200).send("Adoption request status updated successfully.");
+    } catch (err) {
+      console.error("Error updating adoption request status:", err);
+      res.status(500).send("Error updating adoption request status.");
+    }
+  };
 
 // Delete adoption request by ID
 exports.deleteAdoptionRequest = async (req, res) => {

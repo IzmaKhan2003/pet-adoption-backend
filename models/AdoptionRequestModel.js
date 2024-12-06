@@ -1,4 +1,5 @@
 const { getConnection } = require("../config/db"); // Import the connection pool
+const oracledb = require("oracledb");
 
 // Fetch all adoption requests
 async function getAdoptionRequests() {
@@ -47,22 +48,32 @@ async function getAdoptionRequestById(requestId) {
   }
 }
 
-// Update adoption request status
+// Function to update adoption request status
 async function updateAdoptionStatus(requestId, status) {
-  const connection = await getConnection();
-  try {
+    const connection = await oracledb.getConnection();
+    
     const sql = `
       UPDATE AdoptionRequest
-      SET Status = :Status
+      SET Status = :status
       WHERE RequestID = :requestId
     `;
-    await connection.execute(sql, { Status: status, requestId }, { autoCommit: true });
-  } catch (err) {
-    throw new Error("Error updating adoption request status: " + err.message);
-  } finally {
-    await connection.close(); // Close the connection
+  
+    const binds = {
+      status,
+      requestId
+    };
+  
+    try {
+      const result = await connection.execute(sql, binds, { autoCommit: true });
+      console.log(`${result.rowsAffected} row(s) updated`);
+      return result;
+    } catch (err) {
+      console.error("Error updating adoption request status:", err);
+      throw err;  // Ensure error is thrown for further handling
+    } finally {
+      await connection.close();
+    }
   }
-}
 
 // Delete an adoption request by ID
 async function deleteAdoptionRequest(requestId) {
