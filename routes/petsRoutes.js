@@ -1,12 +1,13 @@
 const express = require("express");
 const router = express.Router();
 const petsController = require("../controllers/petsController"); // Import controller
+const isAdmin = require("../middlewares/isAdmin");
 
 // Fetch all pets
 router.get("/pets", petsController.getAllPets);
 
-// Add a new pet
-router.post("/pets", petsController.createPet);
+// Admin-only route to create a pet
+router.post("/create", isAdmin, petController.createPet);
 
 // Get a specific pet by ID
 router.get("/pets/:petId", petsController.getPetById);
