@@ -1,18 +1,20 @@
 const { getConnection } = require("../config/db"); // Import the connection pool
 
 // Fetch all health records
-async function getHealthRecords() {
-    const connection = await getConnection(); // Get connection from the pool
+async function getAllHealthRecords() {
+    const connection = await getConnection();
+  
     try {
-      const result = await connection.execute("SELECT * FROM HealthRecord"); // Execute query to fetch health records
-      // Ensure we only return rows and not the entire result object
-      return result && result.rows ? result.rows : [];
+      const result = await connection.execute("SELECT * FROM HealthRecord");
+      // Extract only the rows from the result
+      return result.rows; 
     } catch (err) {
       throw new Error("Error fetching health records: " + err.message);
     } finally {
-      await connection.close(); // Close the connection
+      await connection.close();
     }
   }
+  
 
 // Add a new health record
 async function addHealthRecord(healthRecordDetails) {
@@ -80,4 +82,4 @@ async function deleteHealthRecord(healthId) {
   }
 }
 
-module.exports = { getHealthRecords, addHealthRecord, getHealthRecordById, updateHealthRecord, deleteHealthRecord };
+module.exports = { getAllHealthRecords, addHealthRecord, getHealthRecordById, updateHealthRecord, deleteHealthRecord };

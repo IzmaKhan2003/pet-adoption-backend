@@ -3,14 +3,16 @@ const HealthRecordModel = require("../models/HealthRecordModel"); // Import the 
 // Fetch all health records
 exports.getAllHealthRecords = async (req, res) => {
     try {
-      const healthRecords = await HealthRecordModel.getHealthRecords(); // Get all health records
-      console.log(healthRecords); // Log the response data to verify it's correct
-      res.json(healthRecords); // Return health records in response as JSON
+      const records = await HealthRecordModel.getAllHealthRecords();
+      console.log("Health records fetched from DB:", records); // Log data structure
+  
+      res.json(records); // Send the records to the client
     } catch (err) {
       console.error("Error fetching health records:", err);
       res.status(500).send("Error fetching health records.");
     }
   };
+  
 
 // Add a new health record
 exports.createHealthRecord = async (req, res) => {
