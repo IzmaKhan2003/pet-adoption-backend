@@ -1,5 +1,6 @@
 const express = require("express");
 const bodyParser = require("body-parser");
+
 const petsRoutes = require("./routes/petsRoutes"); // Import pet routes
 const usersRoutes = require("./routes/usersRoutes"); // Import user routes
 const adoptionRequestsRoutes = require("./routes/adoptionRequestsRoutes.js"); // Import adoption request routes
@@ -7,6 +8,7 @@ const healthRecordRoutes = require("./routes/healthRecordRoutes.js"); // Import 
 const followUpCheckRoutes = require("./routes/followUpCheckRoutes.js"); // Import the routes for follow-up checks
 const adminRoutes = require("./routes/adminRoutes.js"); // Import admin routes
 const authRoutes = require("./routes/authRoutes"); // Import authentication routes
+
 const { initDb } = require("./config/db"); // Import database initialization
 
 const app = express();
@@ -15,6 +17,9 @@ const PORT = process.env.PORT || 3000;
 // Middleware
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
+const cors = require("cors");
+
+app.use(cors());
 
 // Use the pet routes
 app.use("/api", petsRoutes);

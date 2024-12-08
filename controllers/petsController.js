@@ -16,25 +16,40 @@ exports.createPet = async (req, res) => {
     const { PetName, PetType, Breed, Age, PetSize, Gender, HealthStatus, VaccinationStatus, Availability } = req.body;
   
     console.log("Received Data:", { PetName, PetType, Breed, Age, PetSize, Gender, HealthStatus, VaccinationStatus, Availability });
-
-    // Validate that PetName is provided
-    if (!PetName) {
-      return res.status(400).send("PetName is required");
-    }
   
-    // Validate other fields (optional, but recommended)
-    if (!PetType || !Breed || !Age || !PetSize || !Gender || !HealthStatus || !VaccinationStatus || !Availability) {
-      return res.status(400).send("All pet details are required.");
+    // Validate that all required fields are provided
+    if (!PetName || !PetType || !Breed || !Age || !PetSize || !Gender || !HealthStatus || !VaccinationStatus || !Availability) {
+      return res.status(400).json({ message: "All pet details are required." });
     }
   
     try {
-      await PetModel.addPet({ PetName, PetType, Breed, Age, PetSize, Gender, HealthStatus, VaccinationStatus, Availability });
-      res.status(201).send("Pet added successfully!");
+      // Add the pet to the database
+      const newPet = await PetModel.addPet({
+        PetName,
+        PetType,
+        Breed,
+        Age,
+        PetSize,
+        Gender,
+        HealthStatus,
+        VaccinationStatus,
+        Availability,
+      });
+  
+      // Send a JSON response
+      res.status(201).json({
+        message: "Pet added successfully!",
+        pet: newPet, // Optionally include the newly added pet details
+      });
     } catch (err) {
       console.error("Error adding pet:", err);
-      res.status(500).send("Error adding pet.");
+      res.status(500).json({
+        message: "Error adding pet.",
+        error: err.message,
+      });
     }
   };
+  
 
 // Get a specific pet by ID
 exports.getPetById = async (req, res) => {
