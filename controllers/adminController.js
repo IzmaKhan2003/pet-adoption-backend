@@ -4,9 +4,12 @@ const AdminModel = require("../models/AdminModel"); // Import Admin model
 exports.getAllAdmins = async (req, res) => {
   try {
     const admins = await AdminModel.getAdmins();
-    res.json(admins);
+    res.status(200).json(admins); // Return admins in response
   } catch (err) {
-    res.status(500).send("Error fetching admins: " + err.message);
+    res.status(500).json({
+      message: "Error fetching admins.",
+      error: err.message,
+    });
   }
 };
 
@@ -15,10 +18,15 @@ exports.getAdminById = async (req, res) => {
   const adminId = req.params.adminId;
   try {
     const admin = await AdminModel.getAdminById(adminId);
-    if (!admin) return res.status(404).send("Admin not found.");
-    res.json(admin);
+    if (!admin) {
+      return res.status(404).json({ message: "Admin not found." });
+    }
+    res.status(200).json(admin); // Return admin details
   } catch (err) {
-    res.status(500).send("Error fetching admin by ID: " + err.message);
+    res.status(500).json({
+      message: "Error fetching admin by ID.",
+      error: err.message,
+    });
   }
 };
 
@@ -28,9 +36,14 @@ exports.updateAdmin = async (req, res) => {
   const { Name, Email, Password } = req.body;
   try {
     await AdminModel.updateAdmin(adminId, { Name, Email, Password });
-    res.send("Admin updated successfully!");
+    res.status(200).json({
+      message: "Admin updated successfully!",
+    }); // Success message
   } catch (err) {
-    res.status(500).send("Error updating admin: " + err.message);
+    res.status(500).json({
+      message: "Error updating admin.",
+      error: err.message,
+    });
   }
 };
 
@@ -39,8 +52,11 @@ exports.deleteAdmin = async (req, res) => {
   const adminId = req.params.adminId;
   try {
     await AdminModel.deleteAdmin(adminId);
-    res.send("Admin deleted successfully!");
+    res.status(200).json({ message: "Admin deleted successfully!" }); // Success message
   } catch (err) {
-    res.status(500).send("Error deleting admin: " + err.message);
+    res.status(500).json({
+      message: "Error deleting admin.",
+      error: err.message,
+    });
   }
 };

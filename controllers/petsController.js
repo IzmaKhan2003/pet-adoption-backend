@@ -4,52 +4,54 @@ const PetModel = require("../models/PetModel"); // Import the Pet model
 exports.getAllPets = async (req, res) => {
   try {
     const pets = await PetModel.getPets(); // Call model function to get pets
-    res.json(pets); // Send the response back with the fetched pets
+    res.status(200).json(pets); // Send the response back with the fetched pets
   } catch (err) {
     console.error("Error fetching pets:", err);
-    res.status(500).send("Error fetching pets.");
+    res.status(500).json({
+      message: "Error fetching pets.",
+      error: err.message,
+    });
   }
 };
 
 // Add a new pet
 exports.createPet = async (req, res) => {
-    const { PetName, PetType, Breed, Age, PetSize, Gender, HealthStatus, VaccinationStatus, Availability } = req.body;
-  
-    console.log("Received Data:", { PetName, PetType, Breed, Age, PetSize, Gender, HealthStatus, VaccinationStatus, Availability });
-  
-    // Validate that all required fields are provided
-    if (!PetName || !PetType || !Breed || !Age || !PetSize || !Gender || !HealthStatus || !VaccinationStatus || !Availability) {
-      return res.status(400).json({ message: "All pet details are required." });
-    }
-  
-    try {
-      // Add the pet to the database
-      const newPet = await PetModel.addPet({
-        PetName,
-        PetType,
-        Breed,
-        Age,
-        PetSize,
-        Gender,
-        HealthStatus,
-        VaccinationStatus,
-        Availability,
-      });
-  
-      // Send a JSON response
-      res.status(201).json({
-        message: "Pet added successfully!",
-        pet: newPet, // Optionally include the newly added pet details
-      });
-    } catch (err) {
-      console.error("Error adding pet:", err);
-      res.status(500).json({
-        message: "Error adding pet.",
-        error: err.message,
-      });
-    }
-  };
-  
+  const { PetName, PetType, Breed, Age, PetSize, Gender, HealthStatus, VaccinationStatus, Availability } = req.body;
+
+  console.log("Received Data:", { PetName, PetType, Breed, Age, PetSize, Gender, HealthStatus, VaccinationStatus, Availability });
+
+  // Validate that all required fields are provided
+  if (!PetName || !PetType || !Breed || !Age || !PetSize || !Gender || !HealthStatus || !VaccinationStatus || !Availability) {
+    return res.status(400).json({ message: "All pet details are required." });
+  }
+
+  try {
+    // Add the pet to the database
+    const newPet = await PetModel.addPet({
+      PetName,
+      PetType,
+      Breed,
+      Age,
+      PetSize,
+      Gender,
+      HealthStatus,
+      VaccinationStatus,
+      Availability,
+    });
+
+    // Send a JSON response
+    res.status(201).json({
+      message: "Pet added successfully!",
+      pet: newPet, // Optionally include the newly added pet details
+    });
+  } catch (err) {
+    console.error("Error adding pet:", err);
+    res.status(500).json({
+      message: "Error adding pet.",
+      error: err.message,
+    });
+  }
+};
 
 // Get a specific pet by ID
 exports.getPetById = async (req, res) => {
@@ -58,12 +60,15 @@ exports.getPetById = async (req, res) => {
   try {
     const pet = await PetModel.getPetById(petId); // Call model function to get pet by ID
     if (!pet) {
-      return res.status(404).send("Pet not found.");
+      return res.status(404).json({ message: "Pet not found." });
     }
-    res.json(pet); // Return pet details
+    res.status(200).json(pet); // Return pet details
   } catch (err) {
     console.error("Error fetching pet by ID:", err);
-    res.status(500).send("Error fetching pet by ID.");
+    res.status(500).json({
+      message: "Error fetching pet by ID.",
+      error: err.message,
+    });
   }
 };
 
@@ -74,10 +79,13 @@ exports.updatePet = async (req, res) => {
 
   try {
     await PetModel.updatePet(petId, { PetName, PetType, Breed, Age, PetSize, Gender, HealthStatus, VaccinationStatus, Availability }); // Call model function
-    res.send("Pet updated successfully!");
+    res.status(200).json({ message: "Pet updated successfully!" });
   } catch (err) {
     console.error("Error updating pet:", err);
-    res.status(500).send("Error updating pet.");
+    res.status(500).json({
+      message: "Error updating pet.",
+      error: err.message,
+    });
   }
 };
 
@@ -87,10 +95,13 @@ exports.deletePet = async (req, res) => {
 
   try {
     await PetModel.deletePet(petId); // Call model function to delete pet
-    res.send("Pet deleted successfully!");
+    res.status(200).json({ message: "Pet deleted successfully!" });
   } catch (err) {
     console.error("Error deleting pet:", err);
-    res.status(500).send("Error deleting pet.");
+    res.status(500).json({
+      message: "Error deleting pet.",
+      error: err.message,
+    });
   }
 };
 
@@ -100,9 +111,12 @@ exports.getPetsByAvailability = async (req, res) => {
 
   try {
     const pets = await PetModel.getPetsByAvailability(status); // Call model function
-    res.json(pets); // Return pets with the given availability
+    res.status(200).json(pets); // Return pets with the given availability
   } catch (err) {
     console.error("Error fetching pets by availability:", err);
-    res.status(500).send("Error fetching pets by availability.");
+    res.status(500).json({
+      message: "Error fetching pets by availability.",
+      error: err.message,
+    });
   }
 };

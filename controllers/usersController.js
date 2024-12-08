@@ -4,10 +4,13 @@ const UserModel = require("../models/UserModel"); // Import the User model
 exports.getAllUsers = async (req, res) => {
   try {
     const users = await UserModel.getUsers(); // Call the model function to get users
-    res.json(users); // Send the response back with the fetched users
+    res.status(200).json(users); // Send the response back with the fetched users
   } catch (err) {
     console.error("Error fetching users:", err);
-    res.status(500).send("Error fetching users.");
+    res.status(500).json({
+      message: "Error fetching users.",
+      error: err.message,
+    });
   }
 };
 
@@ -17,10 +20,15 @@ exports.createUser = async (req, res) => {
 
   try {
     await UserModel.addUser({ Name, Email, Password, Phone, Address, UserType }); // Call model function
-    res.status(201).send("User added successfully!"); // Return success response
+    res.status(201).json({
+      message: "User added successfully!",
+    }); // Return success response
   } catch (err) {
     console.error("Error adding user:", err);
-    res.status(500).send("Error adding user.");
+    res.status(500).json({
+      message: "Error adding user.",
+      error: err.message,
+    });
   }
 };
 
@@ -31,12 +39,15 @@ exports.getUserById = async (req, res) => {
   try {
     const user = await UserModel.getUserById(userId); // Call model function to get user by ID
     if (!user) {
-      return res.status(404).send("User not found.");
+      return res.status(404).json({ message: "User not found." });
     }
-    res.json(user); // Return user details
+    res.status(200).json(user); // Return user details
   } catch (err) {
     console.error("Error fetching user by ID:", err);
-    res.status(500).send("Error fetching user by ID.");
+    res.status(500).json({
+      message: "Error fetching user by ID.",
+      error: err.message,
+    });
   }
 };
 
@@ -47,10 +58,13 @@ exports.updateUser = async (req, res) => {
 
   try {
     await UserModel.updateUser(userId, { Name, Email, Password, Phone, Address, UserType }); // Call model function
-    res.send("User updated successfully!");
+    res.status(200).json({ message: "User updated successfully!" });
   } catch (err) {
     console.error("Error updating user:", err);
-    res.status(500).send("Error updating user.");
+    res.status(500).json({
+      message: "Error updating user.",
+      error: err.message,
+    });
   }
 };
 
@@ -60,9 +74,12 @@ exports.deleteUser = async (req, res) => {
 
   try {
     await UserModel.deleteUser(userId); // Call model function to delete user
-    res.send("User deleted successfully!");
+    res.status(200).json({ message: "User deleted successfully!" });
   } catch (err) {
     console.error("Error deleting user:", err);
-    res.status(500).send("Error deleting user.");
+    res.status(500).json({
+      message: "Error deleting user.",
+      error: err.message,
+    });
   }
 };

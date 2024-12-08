@@ -4,10 +4,13 @@ const FollowUpCheckModel = require("../models/FollowUpCheckModel"); // Import th
 exports.getAllFollowUpChecks = async (req, res) => {
   try {
     const followUpChecks = await FollowUpCheckModel.getFollowUpChecks(); // Get all follow-up checks
-    res.json(followUpChecks); // Return the follow-up checks in the response as JSON
+    res.status(200).json(followUpChecks); // Return the follow-up checks in the response as JSON
   } catch (err) {
     console.error("Error fetching follow-up checks:", err);
-    res.status(500).send("Error fetching follow-up checks.");
+    res.status(500).json({
+      message: "Error fetching follow-up checks.",
+      error: err.message,
+    });
   }
 };
 
@@ -17,10 +20,15 @@ exports.createFollowUpCheck = async (req, res) => {
 
   try {
     await FollowUpCheckModel.addFollowUpCheck({ PetID, CheckDate, Notes, UserID }); // Add the follow-up check
-    res.status(201).send("Follow-up check added successfully!"); // Success message
+    res.status(201).json({
+      message: "Follow-up check added successfully!",
+    }); // Success message
   } catch (err) {
     console.error("Error adding follow-up check:", err);
-    res.status(500).send("Error adding follow-up check.");
+    res.status(500).json({
+      message: "Error adding follow-up check.",
+      error: err.message,
+    });
   }
 };
 
@@ -31,12 +39,15 @@ exports.getFollowUpCheckById = async (req, res) => {
   try {
     const followUpCheck = await FollowUpCheckModel.getFollowUpCheckById(checkId); // Get follow-up check by ID
     if (!followUpCheck) {
-      return res.status(404).send("Follow-up check not found.");
+      return res.status(404).json({ message: "Follow-up check not found." });
     }
-    res.json(followUpCheck); // Return the follow-up check details
+    res.status(200).json(followUpCheck); // Return the follow-up check details
   } catch (err) {
     console.error("Error fetching follow-up check by ID:", err);
-    res.status(500).send("Error fetching follow-up check by ID.");
+    res.status(500).json({
+      message: "Error fetching follow-up check by ID.",
+      error: err.message,
+    });
   }
 };
 
@@ -47,10 +58,13 @@ exports.updateFollowUpCheck = async (req, res) => {
 
   try {
     await FollowUpCheckModel.updateFollowUpCheck(checkId, { CheckDate, Notes, UserID }); // Update follow-up check details
-    res.send("Follow-up check updated successfully!"); // Success message
+    res.status(200).json({ message: "Follow-up check updated successfully!" }); // Success message
   } catch (err) {
     console.error("Error updating follow-up check:", err);
-    res.status(500).send("Error updating follow-up check.");
+    res.status(500).json({
+      message: "Error updating follow-up check.",
+      error: err.message,
+    });
   }
 };
 
@@ -60,9 +74,12 @@ exports.deleteFollowUpCheck = async (req, res) => {
 
   try {
     await FollowUpCheckModel.deleteFollowUpCheck(checkId); // Delete follow-up check
-    res.send("Follow-up check deleted successfully!"); // Success message
+    res.status(200).json({ message: "Follow-up check deleted successfully!" }); // Success message
   } catch (err) {
     console.error("Error deleting follow-up check:", err);
-    res.status(500).send("Error deleting follow-up check.");
+    res.status(500).json({
+      message: "Error deleting follow-up check.",
+      error: err.message,
+    });
   }
 };

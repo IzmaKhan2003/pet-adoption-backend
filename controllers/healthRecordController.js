@@ -2,17 +2,19 @@ const HealthRecordModel = require("../models/HealthRecordModel"); // Import the 
 
 // Fetch all health records
 exports.getAllHealthRecords = async (req, res) => {
-    try {
-      const records = await HealthRecordModel.getAllHealthRecords();
-      console.log("Health records fetched from DB:", records); // Log data structure
+  try {
+    const records = await HealthRecordModel.getAllHealthRecords();
+    console.log("Health records fetched from DB:", records); // Log data structure
   
-      res.json(records); // Send the records to the client
-    } catch (err) {
-      console.error("Error fetching health records:", err);
-      res.status(500).send("Error fetching health records.");
-    }
-  };
-  
+    res.status(200).json(records); // Send the records to the client
+  } catch (err) {
+    console.error("Error fetching health records:", err);
+    res.status(500).json({
+      message: "Error fetching health records.",
+      error: err.message,
+    });
+  }
+};
 
 // Add a new health record
 exports.createHealthRecord = async (req, res) => {
@@ -20,10 +22,15 @@ exports.createHealthRecord = async (req, res) => {
 
   try {
     await HealthRecordModel.addHealthRecord({ PetID, Details, History }); // Add health record
-    res.status(201).send("Health record added successfully!"); // Success message
+    res.status(201).json({
+      message: "Health record added successfully!",
+    }); // Success message
   } catch (err) {
     console.error("Error adding health record:", err);
-    res.status(500).send("Error adding health record.");
+    res.status(500).json({
+      message: "Error adding health record.",
+      error: err.message,
+    });
   }
 };
 
@@ -34,12 +41,15 @@ exports.getHealthRecordById = async (req, res) => {
   try {
     const healthRecord = await HealthRecordModel.getHealthRecordById(healthId); // Get health record by ID
     if (!healthRecord) {
-      return res.status(404).send("Health record not found.");
+      return res.status(404).json({ message: "Health record not found." });
     }
-    res.json(healthRecord); // Return health record details
+    res.status(200).json(healthRecord); // Return health record details
   } catch (err) {
     console.error("Error fetching health record by ID:", err);
-    res.status(500).send("Error fetching health record by ID.");
+    res.status(500).json({
+      message: "Error fetching health record by ID.",
+      error: err.message,
+    });
   }
 };
 
@@ -50,10 +60,13 @@ exports.updateHealthRecord = async (req, res) => {
 
   try {
     await HealthRecordModel.updateHealthRecord(healthId, { Details, History }); // Update health record
-    res.send("Health record updated successfully!"); // Success message
+    res.status(200).json({ message: "Health record updated successfully!" }); // Success message
   } catch (err) {
     console.error("Error updating health record:", err);
-    res.status(500).send("Error updating health record.");
+    res.status(500).json({
+      message: "Error updating health record.",
+      error: err.message,
+    });
   }
 };
 
@@ -63,9 +76,12 @@ exports.deleteHealthRecord = async (req, res) => {
 
   try {
     await HealthRecordModel.deleteHealthRecord(healthId); // Delete health record
-    res.send("Health record deleted successfully!"); // Success message
+    res.status(200).json({ message: "Health record deleted successfully!" }); // Success message
   } catch (err) {
     console.error("Error deleting health record:", err);
-    res.status(500).send("Error deleting health record.");
+    res.status(500).json({
+      message: "Error deleting health record.",
+      error: err.message,
+    });
   }
 };
