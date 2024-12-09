@@ -36,10 +36,10 @@ exports.createHealthRecord = async (req, res) => {
 
 // Get health record by ID
 exports.getHealthRecordById = async (req, res) => {
-  const healthId = req.params.healthId;
+  const petId = req.params.petId;
 
   try {
-    const healthRecord = await HealthRecordModel.getHealthRecordById(healthId); // Get health record by ID
+    const healthRecord = await HealthRecordModel.getHealthRecordById(petId); // Get health record by ID
     if (!healthRecord) {
       return res.status(404).json({ message: "Health record not found." });
     }
@@ -55,11 +55,11 @@ exports.getHealthRecordById = async (req, res) => {
 
 // Update health record details
 exports.updateHealthRecord = async (req, res) => {
-  const healthId = req.params.healthId;
+  const petId = req.params.petId;
   const { Details, History } = req.body;
 
   try {
-    await HealthRecordModel.updateHealthRecord(healthId, { Details, History }); // Update health record
+    await HealthRecordModel.updateHealthRecord(petId, { Details, History }); // Update health record
     res.status(200).json({ message: "Health record updated successfully!" }); // Success message
   } catch (err) {
     console.error("Error updating health record:", err);
@@ -72,10 +72,10 @@ exports.updateHealthRecord = async (req, res) => {
 
 // Delete health record by ID
 exports.deleteHealthRecord = async (req, res) => {
-  const healthId = req.params.healthId;
+  const petId = req.params.healthId;
 
   try {
-    await HealthRecordModel.deleteHealthRecord(healthId); // Delete health record
+    await HealthRecordModel.deleteHealthRecord(petId); // Delete health record
     res.status(200).json({ message: "Health record deleted successfully!" }); // Success message
   } catch (err) {
     console.error("Error deleting health record:", err);
@@ -85,3 +85,6 @@ exports.deleteHealthRecord = async (req, res) => {
     });
   }
 };
+
+
+  

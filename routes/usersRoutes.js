@@ -11,11 +11,12 @@ router.get("/users", isAdmin, usersController.getAllUsers);
 router.post("/users", usersController.createUser);
 
 // Allow Admins or the user themselves to access the route
-router.get("/:userId", isSelfOrAdmin, usersController.getUserById);
+router.get("/:userId", usersController.getUserById);
 
 // Update user details by ID
 router.put("/users/:userId", usersController.updateUser);
 
+router.get("/users/:email", usersController.getUserByEmail);
 // Delete a user by ID
 router.delete("/users/:userId", usersController.deleteUser);
 

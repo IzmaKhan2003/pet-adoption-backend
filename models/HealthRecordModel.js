@@ -35,23 +35,23 @@ async function addHealthRecord(healthRecordDetails) {
 }
 
 // Get a health record by ID
-async function getHealthRecordById(healthId) {
+async function getHealthRecordById(petId) {
   const connection = await getConnection();
   try {
     const result = await connection.execute(
-      "SELECT * FROM HealthRecord WHERE HealthID = :healthId", 
-      [healthId] // Bind the healthId parameter
+      "SELECT * FROM HealthRecord WHERE PetID = :petId", 
+      [petId] // Bind the healthId parameter
     );
     return result.rows[0]; // Return the health record with the specified ID
   } catch (err) {
-    throw new Error("Error fetching health record by ID: " + err.message);
+    throw new Error("Error fetching health record by petID: " + err.message);
   } finally {
     await connection.close(); // Close the connection
   }
 }
 
 // Update health record details
-async function updateHealthRecord(healthId, healthRecordDetails) {
+async function updateHealthRecord(petId, healthRecordDetails) {
   const connection = await getConnection();
   const { Details, History } = healthRecordDetails;
 
@@ -59,9 +59,9 @@ async function updateHealthRecord(healthId, healthRecordDetails) {
     const sql = `
       UPDATE HealthRecord
       SET Details = :Details, History = :History
-      WHERE HealthID = :healthId
+      WHERE PetID = :petId
     `;
-    await connection.execute(sql, { Details, History, healthId }, { autoCommit: true });
+    await connection.execute(sql, { Details, History, petId }, { autoCommit: true });
   } catch (err) {
     throw new Error("Error updating health record: " + err.message);
   } finally {
@@ -70,11 +70,11 @@ async function updateHealthRecord(healthId, healthRecordDetails) {
 }
 
 // Delete a health record by ID
-async function deleteHealthRecord(healthId) {
+async function deleteHealthRecord(petId) {
   const connection = await getConnection();
   try {
-    const sql = "DELETE FROM HealthRecord WHERE HealthID = :healthId";
-    await connection.execute(sql, [healthId], { autoCommit: true });
+    const sql = "DELETE FROM HealthRecord WHERE PetID = :petId";
+    await connection.execute(sql, [petId], { autoCommit: true });
   } catch (err) {
     throw new Error("Error deleting health record: " + err.message);
   } finally {
@@ -82,4 +82,8 @@ async function deleteHealthRecord(healthId) {
   }
 }
 
-module.exports = { getAllHealthRecords, addHealthRecord, getHealthRecordById, updateHealthRecord, deleteHealthRecord };
+
+  module.exports = { getAllHealthRecords, addHealthRecord, getHealthRecordById, updateHealthRecord, deleteHealthRecord};
+  
+
+

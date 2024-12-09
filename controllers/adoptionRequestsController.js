@@ -4,10 +4,11 @@ const { sendAdoptionApprovalEmail } = require("../utils/emailUtils");
 // Fetch all adoption requests
 exports.getAllAdoptionRequests = async (req, res) => {
   try {
-    const adoptionRequests = await AdoptionRequestModel.getAdoptionRequests(); // Get all adoption requests
-    res.status(200).json(adoptionRequests); // Return adoption requests in response
+    const adoptionRequests = await AdoptionRequestModel.getAdoptionRequests();
+    console.log(adoptionRequests);  // Log adoption requests to see if data is returned
+    res.status(200).json(adoptionRequests);
   } catch (err) {
-    console.error("Error fetching adoption requests:", err);
+    console.error("Error fetching adoption requests:", err);  // Log the full error for debugging
     res.status(500).json({
       message: "Error fetching adoption requests.",
       error: err.message,
@@ -17,21 +18,19 @@ exports.getAllAdoptionRequests = async (req, res) => {
 
 // Add a new adoption request
 exports.createAdoptionRequest = async (req, res) => {
-  const { UserID, PetID, Status } = req.body;
-
-  try {
-    await AdoptionRequestModel.addAdoptionRequest({ UserID, PetID, Status }); // Add adoption request
-    res.status(201).json({
-      message: "Adoption request added successfully!",
-    }); // Success message
-  } catch (err) {
-    console.error("Error adding adoption request:", err);
-    res.status(500).json({
-      message: "Error adding adoption request.",
-      error: err.message,
-    });
-  }
-};
+    const { email, petId, comments } = req.body;
+  
+    try {
+      await AdoptionRequestModel.addAdoptionRequest({ email, petId, comments });
+      res.status(201).json({ message: "Adoption request added successfully!" });
+    } catch (err) {
+      console.error("Error adding adoption request:", err.message);
+      res.status(500).json({
+        message: "Error adding adoption request.",
+        error: err.message,
+      });
+    }
+  };
 
 // Get adoption request by ID
 exports.getAdoptionRequestById = async (req, res) => {

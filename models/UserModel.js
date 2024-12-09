@@ -67,21 +67,27 @@ async function getUserByEmail(email) {
   }
   
   
-// Get user by ID
-async function getUserById(userId) {
-  const connection = await getConnection();
-  try {
-    const result = await connection.execute(
-      "SELECT * FROM Users WHERE UserID = :userId", 
-      [userId] // Bind the userId parameter
-    );
-    return result.rows[0]; // Return the user with the specified ID
-  } catch (err) {
-    throw new Error("Error fetching user by ID: " + err.message);
-  } finally {
-    await connection.close(); // Close the connection
-  }
-}
+// // Get user by ID
+async function getUserById(req, res){
+    const userId = req.params.id; // Ensure this is the right value
+    console.log('Fetching user with ID:', userId);
+  
+    try {
+      const connection = await getConnection();
+      const result = await connection.execute(
+        `SELECT * FROM Users WHERE UserID = :userId`,
+        [userId]
+      );
+      res.status(200).json(result.rows);
+    } catch (err) {
+      console.error('Error fetching user by ID:', err);
+      res.status(500).json({
+        message: 'Error fetching user by ID',
+        error: err.message,
+      });
+    }
+  };
+  
 
 // Update user details
 async function updateUser(userId, userDetails) {

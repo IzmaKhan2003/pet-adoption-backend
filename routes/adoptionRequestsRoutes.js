@@ -3,7 +3,7 @@ const router = express.Router();
 const adoptionRequestsController = require("../controllers/adoptionRequestsController"); // Import controller
 const isAdmin = require("../middlewares/isAdmin");
 // Fetch all adoption requests
-router.get("/adoption-requests", adoptionRequestsController.getAllAdoptionRequests);
+//router.get("/adoption-requests", adoptionRequestsController.getAllAdoptionRequests);
 
 // Add a new adoption request
 router.post("/adoption-requests", adoptionRequestsController.createAdoptionRequest);

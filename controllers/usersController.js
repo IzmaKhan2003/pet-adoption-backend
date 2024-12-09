@@ -51,6 +51,25 @@ exports.getUserById = async (req, res) => {
   }
 };
 
+// Get a specific user by email
+exports.getUserByEmail = async (req, res) => {
+    const email = req.params.email;
+  
+    try {
+      const user = await UserModel.getUserByEmail(email); // Call the correct model function
+      if (!user) {
+        return res.status(404).json({ message: "User not found." });
+      }
+      res.status(200).json(user); // Return user details
+    } catch (err) {
+      console.error("Error fetching user by email:", err);
+      res.status(500).json({
+        message: "Error fetching user by email.",
+        error: err.message,
+      });
+    }
+  };
+
 // Update user details by ID
 exports.updateUser = async (req, res) => {
   const userId = req.params.userId;
