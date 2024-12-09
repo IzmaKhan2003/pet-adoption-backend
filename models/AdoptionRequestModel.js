@@ -84,4 +84,4 @@ async function deleteAdoptionRequest(requestId) {
   }
 }
 
-module.exports = { getAdoptionRequests, addAdoptionRequest,updateAdoptionStatus, deleteAdoptionRequest, getreq };
+module.exports = { getAdoptionRequests, addAdoptionRequest,updateAdoptionStatus, deleteAdoptionRequest};
